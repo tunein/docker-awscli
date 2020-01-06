@@ -1,0 +1,29 @@
+version: "2.1"
+orbs:
+  aws-ecr: circleci/aws-ecr@6.7.0
+  docker: circleci/docker@0.5.20
+jobs:
+  build-only:
+    executor: docker/machine
+    steps:
+    - checkout
+    - docker/build:
+        image: circleci/awscli-dind
+workflows:
+  version: 2
+  docker-awscli:
+    jobs:
+    - docker/hadolint:
+        ignore-rules: 'DL3013,DL3018'
+    - aws-ecr/build-and-push-image:
+        repo: circleci/awscli-dind
+        tag: latest
+        filters:
+          branches:
+            only: master
+        requires: 
+        - docker/hadolint
+    - build-only:
+        filters:
+          branches:
+            ignore: master
