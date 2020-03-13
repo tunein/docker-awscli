@@ -12,6 +12,7 @@ RUN set -ex; \
         less \
         make \
         python3 \
+        bash \
     ; \
     python3 -m ensurepip; \
     ln -s python3 /usr/bin/python ;\
